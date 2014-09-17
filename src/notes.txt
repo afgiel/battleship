@@ -1,0 +1,5 @@
+components: 
+
+players, boards, ships
+
+board and ship have to interface
