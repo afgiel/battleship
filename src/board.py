@@ -1,5 +1,4 @@
 import constants
-import ship
 import copy
 
 class Board():
@@ -12,8 +11,10 @@ class Board():
 			for j in xrange(constants.BOARD_SIZE):
 				row.append(0)
 			self.grid.append(row)
-		self.ships = []
 		self.status = constants.ALIVE
+
+	def is_alive(self):
+		return self.status == constants.ALIVE
 
 	def to_std_out(self):
 		print '%s, your board currently looks like this:' % (self.player_name)
@@ -23,8 +24,21 @@ class Board():
 				str_row.append(str(elem))
 			print ' '.join(str_row)
 
+	def print_opp_view(self, opp_shots):
+		print 'Your opponent\'s board currently looks like this:'
+		for i in range(len(self.grid)):
+			str_row = ['\t']
+			for j in range(len(self.grid[i])):
+				if self.grid[i][j] == -1:
+					str_row.append('X')
+				elif (i - 1, j - 1) in opp_shots:
+					str_row.append('0')
+				else:
+					str_row.append('?')
+			print ' '.join(str_row)
+
 	def fill_board(self):
-		for ship_type in ship.SHIP_TYPES:
+		for ship_type in constants.SHIP_LENS:
 			ship_placed = False
 			while not ship_placed:
 				start_index = self.get_start_index(ship_type)
@@ -44,6 +58,7 @@ class Board():
 				self.to_std_out()
 				ship_placed = True
 		print '%s, all your ships have been placed! Use cmd + k to clear the terminal so your opponent can\'t see'
+		raw_input('Press enter when screen cleared!')
 
 	def place_ship(self, start_index, end_index):
 		xs = [start_index[0] - 1, end_index[0] - 1]
@@ -112,6 +127,7 @@ class Board():
 					start_y = int(start_y)
 				except Exception:
 					print 'FUCKING MAYHEM'
+					continue
 				start_index = (start_x, start_y)
 				if self.in_bounds(start_index, 'start index'):
 					print 'start index successfully saved'
@@ -131,9 +147,26 @@ class Board():
 				end_y = int(end_y)
 			except Exception:
 				print 'FUCKING MAYHEM'
+				continue
 			end_index = (end_x, end_y)
 			if self.in_bounds(end_index, 'end index'):
 				print 'end index successfully saved'
 				have_end = True
 		return end_index
 
+	def update_status(self):
+		for row in self.grid:
+			if 1 in row:
+				self.status = constants.ALIVE
+				return
+		self.status = constants.DEAD
+
+	def take_shot(self, index):
+		x = index[0] - 1 
+		y = index[1] - 1
+		if self.grid[x][y] == 1:
+			self.grid[x][y] = -1
+			self.update_status()
+			return True
+		else:
+			return False

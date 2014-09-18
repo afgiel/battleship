@@ -7,9 +7,9 @@ DEAD = 'dead'
 
 
 SHIP_LENS = {
-	'Aircraft Carrier': 6,
-	'Battleship': 5,
-	'Destroyer': 4,
+	# 'Aircraft Carrier': 6,
+	# 'Battleship': 5,
+	# 'Destroyer': 4,
 	'Submarine': 3
 }
 
