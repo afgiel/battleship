@@ -31,7 +31,7 @@ class Board():
 			for j in range(len(self.grid[i])):
 				if self.grid[i][j] == -1:
 					str_row.append('X')
-				elif (i - 1, j - 1) in opp_shots:
+				elif (j + 1, i + 1) in opp_shots:
 					str_row.append('0')
 				else:
 					str_row.append('?')
@@ -164,8 +164,8 @@ class Board():
 	def take_shot(self, index):
 		x = index[0] - 1 
 		y = index[1] - 1
-		if self.grid[x][y] == 1:
-			self.grid[x][y] = -1
+		if self.grid[y][x] == 1:
+			self.grid[y][x] = -1
 			self.update_status()
 			return True
 		else:
